@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{212D4240-8411-49FB-B544-3AD6CB1AB330}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>FileManager</RootNamespace>
-    <AssemblyName>FileManager</AssemblyName>
+    <ProjectGuid>{A45394CD-6BAC-4DF2-A265-9D7A7D5F9A8A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FileManager.GUI</RootNamespace>
+    <AssemblyName>FileManager.GUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,21 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FileManager.Commands\FileManager.Commands.csproj">
-      <Project>{9cfbfb7a-25b5-4959-b160-3b539960be12}</Project>
-      <Name>FileManager.Commands</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FileManager.GUI\FileManager.GUI.csproj">
-      <Project>{a45394cd-6bac-4df2-a265-9d7a7d5f9a8a}</Project>
-      <Name>FileManager.GUI</Name>
-    </ProjectReference>
+    <Compile Include="Window.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
