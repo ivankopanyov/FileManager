@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9CFBFB7A-25B5-4959-B160-3B539960BE12}</ProjectGuid>
+    <ProjectGuid>{25B56659-6976-4DED-87DF-BA09B82933BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FileManager.Commands</RootNamespace>
-    <AssemblyName>FileManager.Commands</AssemblyName>
+    <RootNamespace>FileManager.UI</RootNamespace>
+    <AssemblyName>FileManager.UI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,15 +41,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChangeDirectoryCommand.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="CommandHistory.cs" />
-    <Compile Include="CopyCommand.cs" />
-    <Compile Include="ICommand.cs" />
-    <Compile Include="InfoCommand.cs" />
-    <Compile Include="ListCommand.cs" />
+    <Compile Include="Exceptions\InvalidHeightException.cs" />
+    <Compile Include="Exceptions\InvalidWeigthException.cs" />
+    <Compile Include="Exceptions\NullWindowException.cs" />
+    <Compile Include="Exceptions\InvalidPositionException.cs" />
+    <Compile Include="Exceptions\InvalidWidthException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RemoveCommand.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Window.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FileManager.Commands")]
+[assembly: AssemblyTitle("FileManager.API")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FileManager.Commands")]
+[assembly: AssemblyProduct("FileManager.API")]
 [assembly: AssemblyCopyright("Copyright ©  2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("9cfbfb7a-25b5-4959-b160-3b539960be12")]
+[assembly: Guid("ca51a1fd-f770-4d7d-89b4-c3bda6bc7aeb")]
 
 // Version information for an assembly consists of the following four values:
 //

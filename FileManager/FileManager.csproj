@@ -43,20 +43,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileManager.cs" />
+    <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="FileManagerException.cs" />
+    <Compile Include="Commands\ChangeDirectoryCommand.cs" />
+    <Compile Include="Commands\CopyCommand.cs" />
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\InfoCommand.cs" />
+    <Compile Include="Commands\ListCommand.cs" />
+    <Compile Include="Commands\RemoveCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FileManager.Commands\FileManager.Commands.csproj">
-      <Project>{9cfbfb7a-25b5-4959-b160-3b539960be12}</Project>
-      <Name>FileManager.Commands</Name>
+    <ProjectReference Include="..\FileManager.Utils\FileManager.Utils.csproj">
+      <Project>{ca51a1fd-f770-4d7d-89b4-c3bda6bc7aeb}</Project>
+      <Name>FileManager.Utils</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileManager.GUI\FileManager.GUI.csproj">
-      <Project>{a45394cd-6bac-4df2-a265-9d7a7d5f9a8a}</Project>
-      <Name>FileManager.GUI</Name>
+    <ProjectReference Include="..\FileManager.UI\FileManager.UI.csproj">
+      <Project>{25b56659-6976-4ded-87df-ba09b82933be}</Project>
+      <Name>FileManager.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
