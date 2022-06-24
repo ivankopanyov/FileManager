@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using FileManager.UI;
 
 namespace FileManager
@@ -8,29 +10,19 @@ namespace FileManager
     /// Команда файлового менеджера для изменения текущей директории.
     /// </summary>
 	public class ChangeDirectoryCommand : ICommand
-	{
+    {
         /// <summary>
         /// Ключевое слово для вызова команды.
         /// </summary>
         public string KeyWord { get; }
 
         /// <summary>
-        /// Окно для вывода результата выполнения команды.
-        /// </summary>
-        public Window ResultWindow { get; }
-
-        /// <summary>
         /// Конструктор класса команды изменения текущей директории.
         /// </summary>
         /// <param name="keyWord">Ключевое слово для вызова команды.</param>
-        /// <param name="resultWindow">Окно для вывода результата выполнения команды.</param>
-        /// <exception cref="NullWindowException">Возбуждается, если переданный экземпляр класса Window равен null.</exception>
-        public ChangeDirectoryCommand(string keyWord, Window resultWindow)
+        public ChangeDirectoryCommand(string keyWord)
         {
             KeyWord = keyWord;
-            if (resultWindow == null)
-                throw new NullWindowException("Переданный экземпляр класса Window не должен быть null");
-            ResultWindow = resultWindow;
         }
 
         /// <summary>
@@ -39,7 +31,7 @@ namespace FileManager
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
         /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null.</exception>
-        public void Execute(string command, string currentDir)
+        public string Execute(string command, string currentDir)
         {
             if (command == null)
                 throw new FileManagerException("Ошибка: не указана команда.");
@@ -60,7 +52,7 @@ namespace FileManager
             }
 
             if (!Directory.Exists(path)) throw new FileManagerException($"Ошибка: директория {path} не найдена.");
-            ResultWindow.Content = FileManager.GetShortPath(path) + ">";
+            return Command.GetShortPath(path) + ">";
         }
     }
 }

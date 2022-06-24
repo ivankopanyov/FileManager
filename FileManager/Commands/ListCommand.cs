@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
-using FileManager.UI;
 
 namespace FileManager
 {
@@ -16,22 +14,17 @@ namespace FileManager
         public string KeyWord { get; }
 
         /// <summary>
-        /// Окно для вывода результата выполнения команды.
+        /// 
         /// </summary>
-        public Window ResultWindow { get; }
+        public int PageNumber { get; private set; } = 1;
 
         /// <summary>
         /// Конструктор класса команды вывода дерева каталогов и файлов.
         /// </summary>
         /// <param name="keyWord">Ключевое слово для вызова команды.</param>
-        /// <param name="resultWindow">Окно для вывода результата выполнения команды.</param>
-        /// <exception cref="NullWindowException">Возбуждается, если переданный экземпляр класса Window равен null.</exception>
-        public ListCommand(string keyWord, Window resultWindow)
+        public ListCommand(string keyWord)
         {
             KeyWord = keyWord;
-            if (resultWindow == null)
-                throw new NullWindowException("Переданный экземпляр класса Window не должен быть null");
-            ResultWindow = resultWindow;
         }
 
         /// <summary>
@@ -41,7 +34,7 @@ namespace FileManager
         /// <param name="currentDir">Текущая директория.</param>
         /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null 
         /// или при некорректном вводе команды.</exception>
-        public void Execute(string command, string currentDir)
+        public string Execute(string command, string currentDir)
         {
 
             if (command == null)
@@ -66,8 +59,8 @@ namespace FileManager
 
             if (Directory.Exists(path))
             {
-                ResultWindow.Content = GetTree(path, 1);
-                return;
+                PageNumber = 1;
+                return GetTree(path);
             }
 
             var dir = command;
@@ -99,7 +92,8 @@ namespace FileManager
                     throw new FileManagerException("Ошибка: некорректно указан номер страницы.");
                 if (pageNumber < 1) 
                     throw new FileManagerException("Ошибка: номер страницы не может быть меньше 1.");
-                ResultWindow.Content = GetTree(dir, pageNumber);
+                PageNumber = pageNumber;
+                return GetTree(dir);
             }
             else throw new FileManagerException($"Ошибка: директория {path} не найдена.");
         }
@@ -110,20 +104,21 @@ namespace FileManager
         /// <param name="dir">Корневая директория.</param>
         /// <param name="pageNumber">Номер страницы.</param>
         /// <returns>Страница дерева каталогов.</returns>
-        private string GetTree(string dir, int pageNumber)
+        private string GetTree(string dir)
         {
-            var tree = GetTree(new DirectoryInfo(dir));
-            var treeArray = tree.Split('\n');
-            var pageLines = ResultWindow.ContentSize.height - 1;
-            var total = treeArray.Length / pageLines + 1;
-            if (pageNumber > total) pageNumber = total;
-            var startIndex = pageLines * (pageNumber - 1);
-            var count = treeArray.Length - startIndex < pageLines ? treeArray.Length - startIndex : pageLines;
-            var result = string.Join("\n", treeArray, startIndex, count);
-            var footer = $"-= {pageNumber} of {total} =-";
-            result += new string('\n', pageLines + 1 - count) 
-                + new string(' ', (ResultWindow.ContentSize.width - footer.Length) / 2) + footer;
-            return result;
+            return GetTree(new DirectoryInfo(dir));
+            //var tree = GetTree(new DirectoryInfo(dir));
+            //var treeArray = tree.Split('\n');
+            //var pageLines = ResultWindow.ContentSize.height - 1;
+            //var total = treeArray.Length / pageLines + 1;
+            //if (pageNumber > total) pageNumber = total;
+            //var startIndex = pageLines * (pageNumber - 1);
+            //var count = treeArray.Length - startIndex < pageLines ? treeArray.Length - startIndex : pageLines;
+            //var result = string.Join("\n", treeArray, startIndex, count);
+            //var footer = $"-= {pageNumber} of {total} =-";
+            //result += new string('\n', pageLines + 1 - count)
+            //    + new string(' ', (ResultWindow.ContentSize.width - footer.Length) / 2) + footer;
+            //return result;
         }
 
         /// <summary>

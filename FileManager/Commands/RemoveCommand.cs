@@ -16,22 +16,12 @@ namespace FileManager
         public string KeyWord { get; }
 
         /// <summary>
-        /// Окно для вывода результата выполнения команды.
-        /// </summary>
-        public Window ResultWindow { get; }
-
-        /// <summary>
         /// Конструктор класса команды удаления каталогов и файлов.
         /// </summary>
         /// <param name="keyWord">Ключевое слово для вызова команды.</param>
-        /// <param name="resultWindow">Окно для вывода результата выполнения команды.</param>
-        /// <exception cref="NullWindowException">Возбуждается, если переданный экземпляр класса Window равен null.</exception>
-        public RemoveCommand(string keyWord, Window resultWindow)
+        public RemoveCommand(string keyWord)
         {
             KeyWord = keyWord;
-            if (resultWindow == null)
-                throw new NullWindowException("Переданный экземпляр класса Window не должен быть null");
-            ResultWindow = resultWindow;
         }
 
         /// <summary>
@@ -41,7 +31,7 @@ namespace FileManager
         /// <param name="currentDir">Текущая директория.</param>
         /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null 
         /// или при ошибке доступа.</exception>
-        public void Execute(string command, string currentDir)
+        public string Execute(string command, string currentDir)
         {
 
             if (command == null)
@@ -76,8 +66,7 @@ namespace FileManager
                     FileManager.WriteExceptionInfo(e);
                     throw new FileManagerException($"Ошибка: не удалось удалить файл {path}");
                 }
-                ResultWindow.Content = $"Файл {path} успешно удален.";
-                return;
+                return $"Файл {path} успешно удален.";
             }
 
             var logs = new StringBuilder();
@@ -88,7 +77,7 @@ namespace FileManager
             if (logsStr != string.Empty)
                 throw new FileManagerException(logsStr);
 
-            ResultWindow.Content = $"Директория {path} успешно удалена.";
+            return $"Директория {path} успешно удалена.";
         }
 
         /// <summary>

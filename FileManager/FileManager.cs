@@ -50,18 +50,6 @@ namespace FileManager
 		}
 
 		/// <summary>
-		/// Сокращает отображаемый путь.
-		/// </summary>
-		/// <param name="path">Путь для сокращения.</param>
-		/// <returns>Сокращенный путь.</returns>
-		public static string GetShortPath(string path)
-        {
-            StringBuilder shortPathName = new StringBuilder((int)API.MAX_PATH);
-            API.GetShortPathName(path, shortPathName, API.MAX_PATH);
-            return shortPathName.ToString();
-        }
-
-		/// <summary>
 		/// Запись текущего отображаемого контента окон в файл.
 		/// </summary>
 		/// <param name="fileName">Файл для записи.</param>

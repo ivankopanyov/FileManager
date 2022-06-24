@@ -13,16 +13,11 @@ namespace FileManager
 		string KeyWord { get; }
 
 		/// <summary>
-		/// Окно для вывода результата выполнения команды.
-		/// </summary>
-		Window ResultWindow { get; }
-
-		/// <summary>
 		/// Метод выполнения команды.
 		/// </summary>
 		/// <param name="command">Атрибуты команды.</param>
 		/// <param name="currentDir">Текущая директория файлового менеджера.</param>
-		void Execute(string command, string currentDir);
+		string Execute(string command, string currentDir);
 	}
 }
 

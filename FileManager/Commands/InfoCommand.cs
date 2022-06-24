@@ -16,22 +16,12 @@ namespace FileManager
         public string KeyWord { get; }
 
         /// <summary>
-        /// Окно для вывода результата выполнения команды.
-        /// </summary>
-        public Window ResultWindow { get; }
-
-        /// <summary>
         /// Конструктор класса команды вывода информации о каталоге или файле.
         /// </summary>
         /// <param name="keyWord">Ключевое слово для вызова команды.</param>
-        /// <param name="resultWindow">Окно для вывода результата выполнения команды.</param>
-        /// <exception cref="NullWindowException">Возбуждается, если переданный экземпляр класса Window равен null.</exception>
-        public InfoCommand(string keyWord, Window resultWindow)
+        public InfoCommand(string keyWord)
         {
             KeyWord = keyWord;
-            if (resultWindow == null)
-                throw new NullWindowException("Переданный экземпляр класса Window не должен быть null");
-            ResultWindow = resultWindow;
         }
 
         /// <summary>
@@ -39,9 +29,7 @@ namespace FileManager
         /// </summary>
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null 
-        /// или при ошибке доступа.</exception>
-        public void Execute(string command, string currentDir)
+        public string Execute(string command, string currentDir)
         {
 
             if (command == null)
@@ -81,8 +69,7 @@ namespace FileManager
                     throw new FileManagerException($"Не удалось получить доступ к файлу {path}.");
                 }
 
-                ResultWindow.Content = result.ToString();
-                return;
+                return result.ToString();
             }
 
             if (Directory.Exists(path))
@@ -105,8 +92,7 @@ namespace FileManager
                     throw new FileManagerException($"Не удалось получить доступ к директории {path}.");
                 }
 
-                ResultWindow.Content = result.ToString();
-                return;
+                return result.ToString();
             }
             
             throw new FileManagerException($"Ошибка: директория или файл {path} не найдены.");

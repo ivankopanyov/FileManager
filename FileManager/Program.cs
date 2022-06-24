@@ -8,11 +8,6 @@ namespace FileManager
     class Program
     {
         /// <summary>
-        /// Массив, хранящий набор комманд для файлового менеджера.
-        /// </summary>
-        private static ICommand[] commands;
-
-        /// <summary>
         /// Основное окно файлового менеджера.
         /// </summary>
         private static Window mainWindow = new Window();
@@ -54,18 +49,8 @@ namespace FileManager
             Console.Title = Properties.Settings.Default.AppName;
 #endif
 
-            commands = new ICommand[]
-            {
-                new ChangeDirectoryCommand("cd", commandWindow),
-                new ListCommand("ls", treeWindow),
-                new CopyCommand("cp", infoWindow),
-                new RemoveCommand("rm", infoWindow),
-                new InfoCommand("info", infoWindow),
-                new ExitCommand("exit", infoWindow)
-            };
-
-            commandWindow.Content = FileManager.GetShortPath(Directory.GetCurrentDirectory()) + ">";
-
+            commandWindow.Content = Command.GetShortPath(Directory.GetCurrentDirectory()) + ">";
+            
             var data = FileManager.LoadState(savingFileName);
             if (data != null && data.Length == 3)
             {
@@ -74,9 +59,14 @@ namespace FileManager
                 commandWindow.Content = data[2];
             }
 
+            treeWindow.showPageNumber = true;
+
             mainWindow.AddWindow(treeWindow);
             mainWindow.AddWindow(infoWindow);
             mainWindow.AddWindow(commandWindow);
+
+            var command = new Command();
+
 
             while (true)
             {
@@ -85,29 +75,26 @@ namespace FileManager
                 var inputCommand = commandWindow.Read(FileManager.Commands);
                 FileManager.AddCommand(inputCommand);
                 infoWindow.Content = string.Empty;
-                var inputCommandArray = inputCommand.Trim().Split();
-                if (inputCommandArray.Length == 0)
-                {
-                    infoWindow.Content = "Ошибка: Команда не указана";
-                    continue;
-                }
-
-                var command = Array.Find(commands, c => c.KeyWord == inputCommandArray[0].ToLower());
-                if (command == null)
-                {
-                    infoWindow.Content = $"Ошибка: Команда {inputCommandArray[0]} не найдена";
-                    continue;
-                }
 
                 try
                 {
-                    var attrs = string.Join(" ", Shift(inputCommandArray));
                     var currentDir = commandWindow.Content.Replace(">", string.Empty);
-                    command.Execute(attrs, currentDir);
+                    var result = command.Execute(inputCommand, currentDir);
 
-                    if (command.GetType() != typeof(ExitCommand))
-                        FileManager.SaveState(savingFileName, 
+                    Window window = infoWindow;
+                    if (command.LastCommand.GetType() == typeof(ListCommand))
+                    {
+                        window = treeWindow;
+                        window.PageNumber = ((ListCommand)command.LastCommand).PageNumber;
+                    }
+                    else if (command.LastCommand.GetType() == typeof(ChangeDirectoryCommand))
+                        window = commandWindow;
+                    
+                    if (command.LastCommand.GetType() != typeof(ExitCommand))
+                        FileManager.SaveState(savingFileName,
                             new string[] { treeWindow.Content, infoWindow.Content, commandWindow.Content });
+
+                    window.Content = result;
                 }
                 catch (FileManagerException e)
                 {
@@ -155,22 +142,6 @@ namespace FileManager
                 API.DeleteMenu(sysMenu, API.SC_MAXIMIZE, API.MF_BYCOMMAND);
                 API.DeleteMenu(sysMenu, API.SC_SIZE, API.MF_BYCOMMAND);
             }
-        }
-
-        /// <summary>
-        /// Удаляет первый элемент массива.
-        /// </summary>
-        /// <param name="array">Массив для удалаения первого элемента.</param>
-        /// <returns>Новый массив с удаленным первым элементом из переданного массива.</returns>
-        private static string[] Shift(string[] array)
-        {
-            if (array == null || array.Length == 0) return array;
-            if (array.Length == 1) return new string[0];
-
-            var result = new string[array.Length - 1];
-            Array.Copy(array, 1, result, 0, array.Length - 1);
-
-            return result;
         }
     }
 }

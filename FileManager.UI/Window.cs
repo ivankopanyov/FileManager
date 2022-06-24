@@ -29,10 +29,26 @@ namespace FileManager.UI
         /// </summary>
         private int limit;
 
+        private int pageNumber = 1;
+
+        public bool showPageNumber = false;
+
         /// <summary>
         /// Контент, выводимый внутри окна.
         /// </summary>
         public string Content { get; set; } = string.Empty;
+
+        public int PageNumber {
+            get => pageNumber;
+
+            set
+            {
+                if (value <= 0)
+                    throw new ArgumentOutOfRangeException("");
+
+                pageNumber = value;
+            }
+        }
 
         /// <summary>
         /// Размер окна без учета рамки.
@@ -195,7 +211,7 @@ namespace FileManager.UI
 
             var heightWindow = height;
 
-            var content = Content != null ? Content.Split('\n').ToList() : new List<string>();
+            var content = Content != null ? GetPageContent().Split('\n').ToList() : new List<string>();
 
             cursorPosition.top = top + (content.Count() > 0 ? content.Count() : 1);
             cursorPosition.left = left +
@@ -240,6 +256,25 @@ namespace FileManager.UI
 
                 top += height - 1;
             }
+        }
+
+        private string GetPageContent()
+        {
+            var contentArray = Content.Split('\n');
+            var pageLines = ContentSize.height;
+            if (showPageNumber) pageLines--; 
+            var total = contentArray.Length / pageLines + 1;
+            if (this.PageNumber > total) this.PageNumber = total;
+            var startIndex = pageLines * (this.PageNumber - 1);
+            var count = contentArray.Length - startIndex < pageLines ? contentArray.Length - startIndex : pageLines;
+            var result = string.Join("\n", contentArray, startIndex, count);
+            if (showPageNumber)
+            {
+                var footer = $"-= {PageNumber} of {total} =-";
+                result += new string('\n', pageLines + 1 - count) + 
+                    new string(' ', (ContentSize.width - footer.Length) / 2) + footer; 
+            }
+            return result;
         }
 
         /// <summary>

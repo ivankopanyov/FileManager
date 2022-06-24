@@ -15,22 +15,12 @@ namespace FileManager
         public string KeyWord { get; }
 
         /// <summary>
-        /// Окно для вывода результата выполнения команды.
-        /// </summary>
-        public Window ResultWindow { get; }
-
-        /// <summary>
         /// Конструктор класса команды завершения работы приложения.
         /// </summary>
         /// <param name="keyWord">Ключевое слово для вызова команды.</param>
-        /// <param name="resultWindow">Окно для вывода результата выполнения команды.</param>
-        /// <exception cref="NullWindowException">Возбуждается, если переданный экземпляр класса Window равен null.</exception>
-        public ExitCommand(string keyWord, Window resultWindow)
+        public ExitCommand(string keyWord)
         {
             KeyWord = keyWord;
-            if (resultWindow == null)
-                throw new NullWindowException("Переданный экземпляр класса Window не должен быть null");
-            ResultWindow = resultWindow;
         }
 
         /// <summary>
@@ -39,7 +29,7 @@ namespace FileManager
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
         /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null.</exception>
-        public void Execute(string command, string currentDir)
+        public string Execute(string command, string currentDir)
         {
             if (command == null)
                 throw new FileManagerException("Ошибка: не указана команда.");
@@ -47,8 +37,8 @@ namespace FileManager
             if (!string.IsNullOrWhiteSpace(command))
                 throw new FileManagerException($"Команда {KeyWord} не содержит параметра {command}.");
 
-            ResultWindow.Content = "Завершение работы приложения...";
             KillProcess();
+            return "Завершение работы приложения...";
         }
 
         /// <summary>
