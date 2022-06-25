@@ -33,10 +33,10 @@ namespace FileManager
         {
 
             if (command == null)
-                throw new FileManagerException("Ошибка: не указана команда.");
+                throw new CommandException("Ошибка: не указана команда.");
 
             if (currentDir == null)
-                throw new FileManagerException("Ошибка: не указана текущая директория.");
+                throw new CommandException("Ошибка: не указана текущая директория.");
 
             string path;
             try
@@ -46,7 +46,7 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (File.Exists(path))
@@ -66,7 +66,7 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException($"Не удалось получить доступ к файлу {path}.");
+                    throw new CommandException($"Не удалось получить доступ к файлу {path}.");
                 }
 
                 return result.ToString();
@@ -89,13 +89,13 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException($"Не удалось получить доступ к директории {path}.");
+                    throw new CommandException($"Не удалось получить доступ к директории {path}.");
                 }
 
                 return result.ToString();
             }
             
-            throw new FileManagerException($"Ошибка: директория или файл {path} не найдены.");
+            throw new CommandException($"Ошибка: директория или файл {path} не найдены.");
         }
 
         /// <summary>

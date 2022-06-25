@@ -29,16 +29,16 @@ namespace FileManager
         /// </summary>
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null 
+        /// <exception cref="CommandException">Возбуждается, если среди переданных значений есть null 
         /// или при ошибке доступа.</exception>
         public string Execute(string command, string currentDir)
         {
 
             if (command == null)
-                throw new FileManagerException("Ошибка: не указана команда.");
+                throw new CommandException("Ошибка: не указана команда.");
 
             if (currentDir == null)
-                throw new FileManagerException("Ошибка: не указана текущая директория.");
+                throw new CommandException("Ошибка: не указана текущая директория.");
 
             string path;
             try
@@ -49,11 +49,11 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (!Directory.Exists(path) && !File.Exists(path)) 
-                throw new FileManagerException($"Ошибка: директория или файл {path} не найдены.");
+                throw new CommandException($"Ошибка: директория или файл {path} не найдены.");
 
             if (File.Exists(path))
             {
@@ -64,7 +64,7 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException($"Ошибка: не удалось удалить файл {path}");
+                    throw new CommandException($"Ошибка: не удалось удалить файл {path}");
                 }
                 return $"Файл {path} успешно удален.";
             }
@@ -75,7 +75,7 @@ namespace FileManager
             var logsStr = logs.ToString();
 
             if (logsStr != string.Empty)
-                throw new FileManagerException(logsStr);
+                throw new CommandException(logsStr);
 
             return $"Директория {path} успешно удалена.";
         }

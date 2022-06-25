@@ -32,16 +32,16 @@ namespace FileManager
         /// </summary>
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null 
+        /// <exception cref="CommandException">Возбуждается, если среди переданных значений есть null 
         /// или при некорректном вводе команды.</exception>
         public string Execute(string command, string currentDir)
         {
 
             if (command == null)
-                throw new FileManagerException("Ошибка: не указана команда.");
+                throw new CommandException("Ошибка: не указана команда.");
 
             if (currentDir == null)
-                throw new FileManagerException("Ошибка: не указана текущая директория.");
+                throw new CommandException("Ошибка: не указана текущая директория.");
 
             currentDir = currentDir.Trim();
             command = command.Trim();
@@ -54,7 +54,7 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (Directory.Exists(path))
@@ -66,7 +66,7 @@ namespace FileManager
             var dir = command;
 
             var index = command.ToLower().LastIndexOf("-p");
-            if (index == -1) throw new FileManagerException($"Ошибка: директория {path} не найдена.");
+            if (index == -1) throw new CommandException($"Ошибка: директория {path} не найдена.");
             if (index == 0) dir = string.Empty;
             if (index > 0) dir = command.Substring(0, index + 1).Trim(); 
             
@@ -77,25 +77,25 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
-            if (!Directory.Exists(dir)) throw new FileManagerException($"Ошибка: директория {dir} не найдена.");
+            if (!Directory.Exists(dir)) throw new CommandException($"Ошибка: директория {dir} не найдена.");
 
             var attrs = command.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);
 
             if (attrs[attrs.Length - 1].ToLower() == "-p") 
-                throw new FileManagerException("Ошибка: не указан номер страницы.");
+                throw new CommandException("Ошибка: не указан номер страницы.");
             if (attrs.Length > 1 && attrs[attrs.Length - 2].ToLower() == "-p")
             {
                 if (!int.TryParse(attrs[attrs.Length - 1], out int pageNumber))
-                    throw new FileManagerException("Ошибка: некорректно указан номер страницы.");
+                    throw new CommandException("Ошибка: некорректно указан номер страницы.");
                 if (pageNumber < 1) 
-                    throw new FileManagerException("Ошибка: номер страницы не может быть меньше 1.");
+                    throw new CommandException("Ошибка: номер страницы не может быть меньше 1.");
                 PageNumber = pageNumber;
                 return GetTree(dir);
             }
-            else throw new FileManagerException($"Ошибка: директория {path} не найдена.");
+            else throw new CommandException($"Ошибка: директория {path} не найдена.");
         }
 
         /// <summary>

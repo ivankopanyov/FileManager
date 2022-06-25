@@ -43,10 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command.cs" />
+    <Compile Include="CommandLine.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
-    <Compile Include="FileManagerException.cs" />
+    <Compile Include="CommandException.cs" />
     <Compile Include="Commands\ChangeDirectoryCommand.cs" />
     <Compile Include="Commands\CopyCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Runtime.InteropServices;
 using System.Xml.Serialization;
-using FileManager.Utils;
 
 namespace FileManager
 {
@@ -13,41 +10,20 @@ namespace FileManager
 	/// </summary>
 	public static class FileManager
 	{
-		/// <summary>
-		/// Список, хранящий историю введенных команд.
-		/// </summary>
-		private static List<string> commands = new List<string>();
+		public const int MF_BYCOMMAND = 0x00000000;
+		public const int SC_CLOSE = 0xF060;
+		public const int SC_MINIMIZE = 0xF020;
+		public const int SC_MAXIMIZE = 0xF030;
+		public const int SC_SIZE = 0xF000;
 
-		/// <summary>
-		/// Возвращает массив, содержащий копию списка введенных команд.
-		/// </summary>
-		public static string[] Commands => commands.ToArray();
+		[DllImport("user32.dll")]
+		public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
 
-		/// <summary>
-		/// Свойство, возвращающее и записывающее колличество выводимых элементов на страницу в дереве каталогов.
-		/// Записывает и считывает из настроек пользователя.
-		/// </summary>
-		private static int Limit
-		{ 
-			get => Properties.Settings.Default.LimitCommands;
+		[DllImport("user32.dll")]
+		public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
-			set	=> Properties.Settings.Default.LimitCommands = value;
-		}
-
-		/// <summary>
-		/// Добавляет команду в историю команд.
-		/// </summary>
-		/// <param name="command">Команда.</param>
-		public static void AddCommand(string command)
-		{
-			UpdateCommandsList();
-
-			if (Limit == 0 || string.IsNullOrWhiteSpace(command) || commands.FindIndex(c => c.ToLower() == command.Trim().ToLower()) != -1) 
-				return;
-			commands.Insert(0, command.Trim());
-			if (commands.Count() > Properties.Settings.Default.LimitCommands)
-				commands.RemoveRange(Properties.Settings.Default.LimitCommands, commands.Count() - Properties.Settings.Default.LimitCommands);
-		}
+		[DllImport("kernel32.dll", ExactSpelling = true)]
+		public static extern IntPtr GetConsoleWindow();
 
 		/// <summary>
 		/// Запись текущего отображаемого контента окон в файл.
@@ -112,17 +88,6 @@ namespace FileManager
 			{ 
 			
 			}
-		}
-
-		/// <summary>
-		/// Обновляет список команд после изменения лимита списка.
-		/// </summary>
-		private static void UpdateCommandsList()
-		{
-			if (Limit < 0) Limit = 0;
-
-			if (commands.Count() > Limit)
-				commands.RemoveRange(Limit, commands.Count() - Limit);
 		}
     }
 }

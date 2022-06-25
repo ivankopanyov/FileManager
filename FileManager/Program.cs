@@ -49,7 +49,7 @@ namespace FileManager
             Console.Title = Properties.Settings.Default.AppName;
 #endif
 
-            commandWindow.Content = Command.GetShortPath(Directory.GetCurrentDirectory()) + ">";
+            commandWindow.Content = CommandLine.GetShortPath(Directory.GetCurrentDirectory()) + ">";
             
             var data = FileManager.LoadState(savingFileName);
             if (data != null && data.Length == 3)
@@ -65,15 +65,14 @@ namespace FileManager
             mainWindow.AddWindow(infoWindow);
             mainWindow.AddWindow(commandWindow);
 
-            var command = new Command();
+            var command = new CommandLine();
 
 
             while (true)
             {
                 SetWindowsSize();
                 mainWindow.Draw(0, 0, Console.WindowWidth - 1, Console.WindowHeight - 1);
-                var inputCommand = commandWindow.Read(FileManager.Commands);
-                FileManager.AddCommand(inputCommand);
+                var inputCommand = commandWindow.Read(command.History);
                 infoWindow.Content = string.Empty;
 
                 try
@@ -96,7 +95,7 @@ namespace FileManager
 
                     window.Content = result;
                 }
-                catch (FileManagerException e)
+                catch (CommandException e)
                 {
                     infoWindow.Content = e.Message;
                 }
@@ -133,14 +132,14 @@ namespace FileManager
             Console.SetWindowSize(width, height);
             Console.SetBufferSize(width, height);
 
-            IntPtr handle = API.GetConsoleWindow();
-            IntPtr sysMenu = API.GetSystemMenu(handle, false);
+            IntPtr handle = FileManager.GetConsoleWindow();
+            IntPtr sysMenu = FileManager.GetSystemMenu(handle, false);
 
             if (handle != IntPtr.Zero)
             {
-                API.DeleteMenu(sysMenu, API.SC_MINIMIZE, API.MF_BYCOMMAND);
-                API.DeleteMenu(sysMenu, API.SC_MAXIMIZE, API.MF_BYCOMMAND);
-                API.DeleteMenu(sysMenu, API.SC_SIZE, API.MF_BYCOMMAND);
+                API.DeleteMenu(sysMenu, FileManager.SC_MINIMIZE, FileManager.MF_BYCOMMAND);
+                API.DeleteMenu(sysMenu, FileManager.SC_MAXIMIZE, FileManager.MF_BYCOMMAND);
+                API.DeleteMenu(sysMenu, FileManager.SC_SIZE, FileManager.MF_BYCOMMAND);
             }
         }
     }

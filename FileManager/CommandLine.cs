@@ -6,11 +6,17 @@ using System.Text;
 
 namespace FileManager
 {
-    public class Command
+    public class CommandLine
     {
         private const uint MAX_PATH = 255;
 
+        /// <summary>
+        /// Список, хранящий историю введенных команд.
+        /// </summary>
+        private static List<string> history = new List<string>();
+
         public ICommand LastCommand { get; private set; }
+
 
         private List<ICommand> commands = new List<ICommand>()
         {
@@ -22,16 +28,59 @@ namespace FileManager
             new ExitCommand("exit")
         };
 
+        /// <summary>
+        /// Свойство, возвращающее и записывающее колличество выводимых элементов на страницу в дереве каталогов.
+        /// Записывает и считывает из настроек пользователя.
+        /// </summary>
+        private int LimitHistory
+        {
+            get => Properties.Settings.Default.LimitCommands;
+
+            set => Properties.Settings.Default.LimitCommands = value;
+        }
+
+        /// <summary>
+        /// Возвращает массив, содержащий копию списка введенных команд.
+        /// </summary>
+        public string[] History => history.ToArray();
+
+        /// <summary>
+        /// Добавляет команду в историю команд.
+        /// </summary>
+        /// <param name="command">Команда.</param>
+        public void AddToHistory(string command)
+        {
+            UpdateHistory();
+
+            if (LimitHistory == 0 || string.IsNullOrWhiteSpace(command) || history.FindIndex(c => c.ToLower() == command.Trim().ToLower()) != -1)
+                return;
+            history.Insert(0, command.Trim());
+            if (history.Count() > Properties.Settings.Default.LimitCommands)
+                history.RemoveRange(Properties.Settings.Default.LimitCommands, history.Count() - Properties.Settings.Default.LimitCommands);
+        }
+
+        /// <summary>
+        /// Обновляет список команд после изменения лимита списка.
+        /// </summary>
+        private void UpdateHistory()
+        {
+            if (LimitHistory < 0) LimitHistory = 0;
+
+            if (history.Count() > LimitHistory)
+                history.RemoveRange(LimitHistory, history.Count() - LimitHistory);
+        }
+
         public string Execute(string inputCommand, string currentDir)
         {
+            AddToHistory(inputCommand);
             var inputCommandArray = inputCommand.Trim().Split();
             if (inputCommandArray.Length == 0) 
-                throw new FileManagerException("Ошибка: Команда не указана");
+                throw new CommandException("Ошибка: Команда не указана");
 
             var command = commands.Find(c => c.KeyWord.ToLower() == inputCommandArray[0].ToLower());
 
             if (command == null)
-                throw new FileManagerException($"Ошибка: Команда {inputCommandArray[0]} не найдена");
+                throw new CommandException($"Ошибка: Команда {inputCommandArray[0]} не найдена");
 
             var attrs = string.Join(" ", Shift(inputCommandArray));
             LastCommand = command;

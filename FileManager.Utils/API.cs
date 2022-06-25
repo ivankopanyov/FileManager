@@ -9,7 +9,6 @@ namespace FileManager.Utils
     /// </summary>
     public static class API
     {
-        public const uint MAX_PATH = 255;
         public const int MF_BYCOMMAND = 0x00000000;
         public const int SC_CLOSE = 0xF060;
         public const int SC_MINIMIZE = 0xF020;
@@ -24,13 +23,5 @@ namespace FileManager.Utils
 
         [DllImport("kernel32.dll", ExactSpelling = true)]
         public static extern IntPtr GetConsoleWindow();
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern uint GetShortPathName(
-           [MarshalAs(UnmanagedType.LPTStr)]
-           string lpszLongPath,
-           [MarshalAs(UnmanagedType.LPTStr)]
-           StringBuilder lpszShortPath,
-           uint cchBuffer);
     }
 }

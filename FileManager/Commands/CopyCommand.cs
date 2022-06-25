@@ -28,15 +28,15 @@ namespace FileManager
         /// </summary>
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null 
+        /// <exception cref="CommandException">Возбуждается, если среди переданных значений есть null 
         /// или при неудачном копировании.</exception>
         public string Execute(string command, string currentDir)
         {
             if (command == null)
-                throw new FileManagerException("Ошибка: не указана команда.");
+                throw new CommandException("Ошибка: не указана команда.");
 
             if (currentDir == null) 
-                throw new FileManagerException("Ошибка: не указана текущая директория.");
+                throw new CommandException("Ошибка: не указана текущая директория.");
 
             var attrs = command.Split();
 
@@ -53,7 +53,7 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException("Ошибка: указанный путь содержит недопустимые символы.");
+                    throw new CommandException("Ошибка: указанный путь содержит недопустимые символы.");
                 }
 
                 if (!Directory.Exists(source) && i == attrs.Length)
@@ -102,7 +102,7 @@ namespace FileManager
             }
 
             if (copyData.source == null)
-                throw new FileManagerException("Ошибка: не корректно указаны данные для копирования.");
+                throw new CommandException("Ошибка: не корректно указаны данные для копирования.");
 
             if (isDir)
             {
@@ -114,7 +114,7 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException($"Ошибка: не удалось скопировать директорию {copyData.source} в {copyData.dest}.");
+                    throw new CommandException($"Ошибка: не удалось скопировать директорию {copyData.source} в {copyData.dest}.");
                 }
             }
 
@@ -126,7 +126,7 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException($"Ошибка: не удалось скопировать файл {copyData.source} в {copyData.dest}.");
+                throw new CommandException($"Ошибка: не удалось скопировать файл {copyData.source} в {copyData.dest}.");
             }
         }
 
@@ -135,7 +135,7 @@ namespace FileManager
         /// </summary>
         /// <param name="source">Директория для копирования.</param>
         /// <param name="dest">Новая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если не удалось скопировать директорию или файл.</exception>
+        /// <exception cref="CommandException">Возбуждается, если не удалось скопировать директорию или файл.</exception>
         private void CopyDirectory(DirectoryInfo source, DirectoryInfo dest)
         {
             Directory.CreateDirectory(dest.FullName);
@@ -151,7 +151,7 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException("Ошибка копирования");
+                throw new CommandException("Ошибка копирования");
             }
 
             for (int i = 0; i < files.Length; i++)
@@ -163,7 +163,7 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException("Ошибка копирования");
+                    throw new CommandException("Ошибка копирования");
                 }
             }
 
@@ -177,7 +177,7 @@ namespace FileManager
                 catch (Exception e)
                 {
                     FileManager.WriteExceptionInfo(e);
-                    throw new FileManagerException("Ошибка копирования");
+                    throw new CommandException("Ошибка копирования");
                 }
             }
                 

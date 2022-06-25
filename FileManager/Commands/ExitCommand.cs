@@ -28,14 +28,14 @@ namespace FileManager
         /// </summary>
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null.</exception>
+        /// <exception cref="CommandException">Возбуждается, если среди переданных значений есть null.</exception>
         public string Execute(string command, string currentDir)
         {
             if (command == null)
-                throw new FileManagerException("Ошибка: не указана команда.");
+                throw new CommandException("Ошибка: не указана команда.");
 
             if (!string.IsNullOrWhiteSpace(command))
-                throw new FileManagerException($"Команда {KeyWord} не содержит параметра {command}.");
+                throw new CommandException($"Команда {KeyWord} не содержит параметра {command}.");
 
             KillProcess();
             return "Завершение работы приложения...";

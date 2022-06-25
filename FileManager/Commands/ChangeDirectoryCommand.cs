@@ -30,14 +30,14 @@ namespace FileManager
         /// </summary>
         /// <param name="command">Команда для выполнения без ключевого слова.</param>
         /// <param name="currentDir">Текущая директория.</param>
-        /// <exception cref="FileManagerException">Возбуждается, если среди переданных значений есть null.</exception>
+        /// <exception cref="CommandException">Возбуждается, если среди переданных значений есть null.</exception>
         public string Execute(string command, string currentDir)
         {
             if (command == null)
-                throw new FileManagerException("Ошибка: не указана команда.");
+                throw new CommandException("Ошибка: не указана команда.");
 
             if (currentDir == null)
-                throw new FileManagerException("Ошибка: не указана текущая директория.");
+                throw new CommandException("Ошибка: не указана текущая директория.");
 
             string path;
             try
@@ -48,11 +48,11 @@ namespace FileManager
             catch (Exception e)
             {
                 FileManager.WriteExceptionInfo(e);
-                throw new FileManagerException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
-            if (!Directory.Exists(path)) throw new FileManagerException($"Ошибка: директория {path} не найдена.");
-            return Command.GetShortPath(path) + ">";
+            if (!Directory.Exists(path)) throw new CommandException($"Ошибка: директория {path} не найдена.");
+            return CommandLine.GetShortPath(path) + ">";
         }
     }
 }
