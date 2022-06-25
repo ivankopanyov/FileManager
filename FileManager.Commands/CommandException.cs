@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     /// <summary>
     /// Возбуждается при некорректном вводе команд и атрибутов и ошибке доступа.

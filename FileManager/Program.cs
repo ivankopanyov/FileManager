@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using FileManager.UI;
-using FileManager.Utils;
+using FileManager.Commands;
 
 namespace FileManager
 {
@@ -66,7 +66,6 @@ namespace FileManager
             mainWindow.AddWindow(commandWindow);
 
             var command = new CommandLine();
-
 
             while (true)
             {
@@ -137,9 +136,9 @@ namespace FileManager
 
             if (handle != IntPtr.Zero)
             {
-                API.DeleteMenu(sysMenu, FileManager.SC_MINIMIZE, FileManager.MF_BYCOMMAND);
-                API.DeleteMenu(sysMenu, FileManager.SC_MAXIMIZE, FileManager.MF_BYCOMMAND);
-                API.DeleteMenu(sysMenu, FileManager.SC_SIZE, FileManager.MF_BYCOMMAND);
+                FileManager.DeleteMenu(sysMenu, FileManager.SC_MINIMIZE, FileManager.MF_BYCOMMAND);
+                FileManager.DeleteMenu(sysMenu, FileManager.SC_MAXIMIZE, FileManager.MF_BYCOMMAND);
+                FileManager.DeleteMenu(sysMenu, FileManager.SC_SIZE, FileManager.MF_BYCOMMAND);
             }
         }
     }

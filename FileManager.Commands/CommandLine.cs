@@ -4,11 +4,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     public class CommandLine
     {
         private const uint MAX_PATH = 255;
+
+        private int limitHistory = 10;
 
         /// <summary>
         /// Список, хранящий историю введенных команд.
@@ -16,7 +18,6 @@ namespace FileManager
         private static List<string> history = new List<string>();
 
         public ICommand LastCommand { get; private set; }
-
 
         private List<ICommand> commands = new List<ICommand>()
         {
@@ -34,9 +35,9 @@ namespace FileManager
         /// </summary>
         private int LimitHistory
         {
-            get => Properties.Settings.Default.LimitCommands;
+            get => limitHistory;
 
-            set => Properties.Settings.Default.LimitCommands = value;
+            set => limitHistory = value;
         }
 
         /// <summary>
@@ -55,8 +56,8 @@ namespace FileManager
             if (LimitHistory == 0 || string.IsNullOrWhiteSpace(command) || history.FindIndex(c => c.ToLower() == command.Trim().ToLower()) != -1)
                 return;
             history.Insert(0, command.Trim());
-            if (history.Count() > Properties.Settings.Default.LimitCommands)
-                history.RemoveRange(Properties.Settings.Default.LimitCommands, history.Count() - Properties.Settings.Default.LimitCommands);
+            if (history.Count() > limitHistory)
+                history.RemoveRange(limitHistory, history.Count() - limitHistory);
         }
 
         /// <summary>

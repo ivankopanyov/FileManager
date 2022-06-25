@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     /// <summary>
     /// Команда вывода дерева каталогов и файлов.
@@ -51,16 +51,15 @@ namespace FileManager
             {
                 path = Path.GetFullPath(Path.Combine(currentDir, command));
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
-                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new Exception("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (Directory.Exists(path))
             {
                 PageNumber = 1;
-                return GetTree(path);
+                return GetTree(new DirectoryInfo(path));
             }
 
             var dir = command;
@@ -74,10 +73,9 @@ namespace FileManager
             {
                 dir = Path.GetFullPath(Path.Combine(currentDir, dir));
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
-                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new Exception("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (!Directory.Exists(dir)) throw new CommandException($"Ошибка: директория {dir} не найдена.");
@@ -93,32 +91,9 @@ namespace FileManager
                 if (pageNumber < 1) 
                     throw new CommandException("Ошибка: номер страницы не может быть меньше 1.");
                 PageNumber = pageNumber;
-                return GetTree(dir);
+                return GetTree(new DirectoryInfo(dir));
             }
             else throw new CommandException($"Ошибка: директория {path} не найдена.");
-        }
-
-        /// <summary>
-        /// Метод получения страницы дерева каталогов.
-        /// </summary>
-        /// <param name="dir">Корневая директория.</param>
-        /// <param name="pageNumber">Номер страницы.</param>
-        /// <returns>Страница дерева каталогов.</returns>
-        private string GetTree(string dir)
-        {
-            return GetTree(new DirectoryInfo(dir));
-            //var tree = GetTree(new DirectoryInfo(dir));
-            //var treeArray = tree.Split('\n');
-            //var pageLines = ResultWindow.ContentSize.height - 1;
-            //var total = treeArray.Length / pageLines + 1;
-            //if (pageNumber > total) pageNumber = total;
-            //var startIndex = pageLines * (pageNumber - 1);
-            //var count = treeArray.Length - startIndex < pageLines ? treeArray.Length - startIndex : pageLines;
-            //var result = string.Join("\n", treeArray, startIndex, count);
-            //var footer = $"-= {pageNumber} of {total} =-";
-            //result += new string('\n', pageLines + 1 - count)
-            //    + new string(' ', (ResultWindow.ContentSize.width - footer.Length) / 2) + footer;
-            //return result;
         }
 
         /// <summary>
@@ -143,9 +118,8 @@ namespace FileManager
                 subDirs = dir.GetDirectories();
                 files = dir.GetFiles();
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
                 return result;
             }
 

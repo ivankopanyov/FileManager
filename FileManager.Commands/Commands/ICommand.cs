@@ -1,6 +1,4 @@
-﻿using FileManager.UI;
-
-namespace FileManager
+﻿namespace FileManager.Commands
 {
 	/// <summary>
 	/// Интерфейс для реализации команды файлового менеджера.

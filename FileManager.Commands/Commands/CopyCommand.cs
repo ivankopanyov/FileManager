@@ -1,8 +1,7 @@
 ﻿using System;
 using System.IO;
-using FileManager.UI;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     /// <summary>
     /// Команда копирования каталогов и файлов.
@@ -50,10 +49,9 @@ namespace FileManager
                 {
                     source = Path.GetFullPath(Path.Combine(currentDir, string.Join(" ", attrs, 0, i + 1).Trim()));
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException("Ошибка: указанный путь содержит недопустимые символы.");
+                    throw new Exception("Ошибка: указанный путь содержит недопустимые символы.");
                 }
 
                 if (!Directory.Exists(source) && i == attrs.Length)
@@ -63,40 +61,26 @@ namespace FileManager
                 }
                 else if (Directory.Exists(source) && i < attrs.Length)
                 {
-                    try
+                    var dest = Path.GetFullPath(Path.Combine(currentDir, string.Join(" ", attrs, i + 1, attrs.Length - i - 1).Trim()));
+                    if (string.IsNullOrEmpty(dest))
                     {
-                        var dest = Path.GetFullPath(Path.Combine(currentDir, string.Join(" ", attrs, i + 1, attrs.Length - i - 1).Trim()));
-                        if (string.IsNullOrEmpty(dest))
-                        {
-                            copyData = (currentDir, source);
-                            isDir = true;
-                        }
-                        else if (!string.IsNullOrEmpty(dest) && !Directory.Exists(dest))
-                        {
-                            copyData = (source, dest);
-                            isDir = true;
-                        }
+                        copyData = (currentDir, source);
+                        isDir = true;
                     }
-                    catch (Exception e)
+                    else if (!string.IsNullOrEmpty(dest) && !Directory.Exists(dest))
                     {
-                        FileManager.WriteExceptionInfo(e);
+                        copyData = (source, dest);
+                        isDir = true;
                     }
                 }
 
                 if (File.Exists(source) && i < attrs.Length)
                 {
-                    try
+                    var dest = Path.GetFullPath(Path.Combine(currentDir, string.Join(" ", attrs, i + 1, attrs.Length - i - 1).Trim()));
+                    if (!string.IsNullOrEmpty(dest) && !File.Exists(dest))
                     {
-                        var dest = Path.GetFullPath(Path.Combine(currentDir, string.Join(" ", attrs, i + 1, attrs.Length - i - 1).Trim()));
-                        if (!string.IsNullOrEmpty(dest) && !File.Exists(dest))
-                        { 
-                            copyData = (source, dest);
-                            isDir = false;
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        FileManager.WriteExceptionInfo(e);
+                        copyData = (source, dest);
+                        isDir = false;
                     }
                 }
             }
@@ -111,10 +95,9 @@ namespace FileManager
                     CopyDirectory(new DirectoryInfo(copyData.source), new DirectoryInfo(copyData.dest));
                     return $"Директория {copyData.source} успешно скопирована в {copyData.dest}.";
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException($"Ошибка: не удалось скопировать директорию {copyData.source} в {copyData.dest}.");
+                    throw new Exception($"Ошибка: не удалось скопировать директорию {copyData.source} в {copyData.dest}.");
                 }
             }
 
@@ -123,10 +106,9 @@ namespace FileManager
                 File.Copy(copyData.source, copyData.dest);
                 return $"Файл {copyData.source} успешно скопирована в {copyData.dest}.";
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
-                throw new CommandException($"Ошибка: не удалось скопировать файл {copyData.source} в {copyData.dest}.");
+                throw new Exception($"Ошибка: не удалось скопировать файл {copyData.source} в {copyData.dest}.");
             }
         }
 
@@ -148,10 +130,9 @@ namespace FileManager
                 subDirs = source.GetDirectories();
                 files = source.GetFiles();
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
-                throw new CommandException("Ошибка копирования");
+                throw new Exception("Ошибка копирования");
             }
 
             for (int i = 0; i < files.Length; i++)
@@ -160,10 +141,9 @@ namespace FileManager
                 {
                     File.Copy(files[i].FullName, dest.FullName);
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException("Ошибка копирования");
+                    throw new Exception("Ошибка копирования");
                 }
             }
 
@@ -174,10 +154,9 @@ namespace FileManager
                     var dir = Path.GetFullPath(Path.Combine(dest.FullName, subDirs[i].Name));
                     CopyDirectory(subDirs[i], new DirectoryInfo(dir));
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException("Ошибка копирования");
+                    throw new Exception("Ошибка копирования");
                 }
             }
                 

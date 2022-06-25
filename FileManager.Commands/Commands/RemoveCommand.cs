@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using FileManager.UI;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     /// <summary>
     /// Команда удаления каталогов и файлов.
@@ -46,10 +45,9 @@ namespace FileManager
                 path = Path.GetFullPath(Path.Combine(currentDir.Trim(), command.Trim()));
 
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
-                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new Exception("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (!Directory.Exists(path) && !File.Exists(path)) 
@@ -61,10 +59,9 @@ namespace FileManager
                 {
                     File.Delete(path);
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException($"Ошибка: не удалось удалить файл {path}");
+                    throw new Exception($"Ошибка: не удалось удалить файл {path}");
                 }
                 return $"Файл {path} успешно удален.";
             }
@@ -107,10 +104,9 @@ namespace FileManager
                 {
                     File.Delete(files[i].FullName);
                 }
-                catch (Exception e)
+                catch
                 {
                     logs.Append($"Ошибка: не удалось удалить файл {files[i].FullName}\n");
-                    FileManager.WriteExceptionInfo(e);
                 }
             }
 
@@ -121,10 +117,9 @@ namespace FileManager
             {
                 Directory.Delete(dir.FullName);
             }
-            catch (Exception e)
+            catch
             {
                 logs.Append($"Ошибка: не удалось удалить директорию {dir.FullName}\n");
-                FileManager.WriteExceptionInfo(e);
             }
 
             return logs;

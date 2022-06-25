@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using FileManager.UI;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     /// <summary>
     /// Команда для вывода информации о каталоге или файле.
@@ -43,10 +42,9 @@ namespace FileManager
             {
                 path = Path.GetFullPath(Path.Combine(currentDir.Trim(), command.Trim()));
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
-                throw new CommandException("Ошибка:  указанный путь содержит недопустимые символы.");
+                throw new Exception("Ошибка:  указанный путь содержит недопустимые символы.");
             }
 
             if (File.Exists(path))
@@ -63,10 +61,9 @@ namespace FileManager
                     result.Append($"Время изменения:   {file.LastWriteTime.ToString("dd.MM.yyyy hh:mm:ss")}\n");
                     result.Append($"Tолько для чтения: {(file.IsReadOnly ? "Да" : "Нет")}\n");
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException($"Не удалось получить доступ к файлу {path}.");
+                    throw new Exception($"Не удалось получить доступ к файлу {path}.");
                 }
 
                 return result.ToString();
@@ -86,10 +83,9 @@ namespace FileManager
                     result.Append($"Время создания:    {dir.CreationTime.ToString("dd.MM.yyyy hh:mm:ss")}\n");
                     result.Append($"Время изменения:   {dir.LastWriteTime.ToString("dd.MM.yyyy hh:mm:ss")}\n");
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
-                    throw new CommandException($"Не удалось получить доступ к директории {path}.");
+                    throw new Exception($"Не удалось получить доступ к директории {path}.");
                 }
 
                 return result.ToString();
@@ -114,9 +110,8 @@ namespace FileManager
                 subDirs = dir.GetDirectories();
                 files = dir.GetFiles();
             }
-            catch (Exception e)
+            catch
             {
-                FileManager.WriteExceptionInfo(e);
                 return -1;
             }
 
@@ -126,9 +121,8 @@ namespace FileManager
                 {
                     currentSize += files[i].Length;
                 }
-                catch (Exception e)
+                catch
                 {
-                    FileManager.WriteExceptionInfo(e);
                     return -1;
                 }
             }

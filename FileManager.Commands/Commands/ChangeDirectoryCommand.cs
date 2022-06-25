@@ -1,13 +1,12 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using FileManager.UI;
+﻿using System;
+using System.IO;
 
-namespace FileManager
+namespace FileManager.Commands
 {
     /// <summary>
-    /// Команда завершения работы приложения.
+    /// Команда файлового менеджера для изменения текущей директории.
     /// </summary>
-    public class ExitCommand : ICommand
+	public class ChangeDirectoryCommand : ICommand
     {
         /// <summary>
         /// Ключевое слово для вызова команды.
@@ -15,10 +14,10 @@ namespace FileManager
         public string KeyWord { get; }
 
         /// <summary>
-        /// Конструктор класса команды завершения работы приложения.
+        /// Конструктор класса команды изменения текущей директории.
         /// </summary>
         /// <param name="keyWord">Ключевое слово для вызова команды.</param>
-        public ExitCommand(string keyWord)
+        public ChangeDirectoryCommand(string keyWord)
         {
             KeyWord = keyWord;
         }
@@ -34,21 +33,21 @@ namespace FileManager
             if (command == null)
                 throw new CommandException("Ошибка: не указана команда.");
 
-            if (!string.IsNullOrWhiteSpace(command))
-                throw new CommandException($"Команда {KeyWord} не содержит параметра {command}.");
+            if (currentDir == null)
+                throw new CommandException("Ошибка: не указана текущая директория.");
 
-            KillProcess();
-            return "Завершение работы приложения...";
-        }
+            string path;
+            try
+            {
+                path = Path.GetFullPath(Path.Combine(currentDir.Trim(), command.Trim()));
+            }
+            catch
+            {
+                throw new Exception("Ошибка:  указанный путь содержит недопустимые символы.");
+            }
 
-        /// <summary>
-        /// Завершает работу приложения через секунду после вызова.
-        /// </summary>
-        /// <returns></returns>
-        private async void KillProcess()
-        {
-            await Task.Delay(1000);
-            Process.GetCurrentProcess().Kill();
+            if (!Directory.Exists(path)) throw new CommandException($"Ошибка: директория {path} не найдена.");
+            return CommandLine.GetShortPath(path) + ">";
         }
     }
 }
